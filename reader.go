@@ -593,7 +593,6 @@ func (this *PdfReader) resolveObject(objSpec *PdfValue) (*PdfValue, error) {
 	var err error
 	var old_pos int64
 
-	// Create new bufio.Reader
 	r := bufio.NewReader(this.f)
 
 	if objSpec.Type == PDF_TYPE_OBJREF {
@@ -608,7 +607,7 @@ func (this *PdfReader) resolveObject(objSpec *PdfValue) (*PdfValue, error) {
 		// Save current file position
 		// This is needed if you want to resolve reference while you're reading another object.
 		// (e.g.: if you need to determine the length of a stream)
-		old_pos, err = this.f.Seek(0, os.SEEK_CUR)
+		old_pos, err = this.f.Seek(0, io.SeekCurrent)
 		if err != nil {
 			return nil, errors.Wrap(err, "Failed to get current position of file")
 		}
@@ -736,7 +735,6 @@ func (this *PdfReader) resolveObject(objSpec *PdfValue) (*PdfValue, error) {
 		return objSpec, nil
 	}
 
-	return &PdfValue{}, nil
 }
 
 // Find the xref offset (should be at the end of the PDF)
